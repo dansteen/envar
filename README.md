@@ -33,8 +33,8 @@ envar is a very small application that reads in a command line, and replaces any
 ## Example
 
 ```
-DURATION=3
-envar sleep \$DURATION
+#> export DURATION=3
+#> envar sleep \$DURATION
 ```
 This will execute `sleep 3`. Note that we escape the `$` above because we are executing on the command line, and otherwise the command line will interpret the variable for us.   Inside a container definition you will likely not need that (depending on what you are using to build the definition of course).
 
