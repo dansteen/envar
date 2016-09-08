@@ -4,23 +4,22 @@ Small application that replaces parameter references to environment variables wi
 # The Problem
 
 Currently, container engines don't process environment variables passed on the command line of their "exec" functions.  Docker has this to say:
-```
-Environment variables are supported by the following list of instructions in the Dockerfile:
+> Environment variables are supported by the following list of instructions in the Dockerfile:
+>
+> ADD
+> COPY
+> ENV
+> EXPOSE
+> LABEL
+> USER
+> WORKDIR
+> VOLUME
+> STOPSIGNAL
+Note that both `ENTRYPOINT` and `CMD` are missing from the above list.   
 
-ADD
-COPY
-ENV
-EXPOSE
-LABEL
-USER
-WORKDIR
-VOLUME
-STOPSIGNAL
-```
-Note that both `ENTRYPOINT` and `CMD` are missing from the above list.   The Appc Spec (as used by rkt et al) says the following:
-```
-*exec* (list of strings, optional) executable to launch and any flags. ...  These strings are not evaluated in any way and environment variables are not substituted.
-```
+The Appc Spec (as used by rkt et al) says the following:
+> *exec* (list of strings, optional) executable to launch and any flags. ...  These strings are not evaluated in any way and environment variables are not substituted.
+
 However, passing variables into the container at runtime is an extermely valuable way of modifying behavior, at runtime, based on environment.   In a Prod environment, I may want one set of values, while in a Staging environment I may want a different set.   The restrictions above seem especially odd when you take into account the fact that you *can* pass variables in, and they do impact the run of the proccess - they are just not interpreted on the actual command line you submit.
 
 # The Solution
