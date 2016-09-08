@@ -43,12 +43,13 @@ This will execute `sleep 3`. Note that we escape the `$` above because we are ex
 There is a large push in the Docker world to have images be as small as possible.  Unfortunately, because envar is written in go, the binary size at build is approximately 3Mb.  This doesn't sound like much, but considering that it's 50 lines of code, and the equivelant code in C would be about 50kb, it seems like a bit much.
 
 You can mitigate this to some extent by building with:
+
 ```
 go build -ldflags "-s -w"
 ```
 and then running the resulting binary through `upx`:
+
 ```
 upx envar
-``
-
+```
 This will result in a binary of about 600kb, which is still large but better than 3Mb.  Of course, this comes with it's own tradeoffs, but it's the usuall speed vs size calculation. 
