@@ -7,21 +7,13 @@ Currently, container engines don't process environment variables passed on the c
 > Environment variables are supported by the following list of instructions in the Dockerfile:
 >
 > ADD
->
 > COPY
->
 > ENV
->
 > EXPOSE
->
 > LABEL
->
 > USER
->
 > WORKDIR
->
 > VOLUME
->
 > STOPSIGNAL
 
 Note that both `ENTRYPOINT` and `CMD` are missing from the above list.   
