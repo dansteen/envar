@@ -54,7 +54,7 @@ Lets say you are using java, and you build your image in the following way:
 #> JAVA_TOOL_OPTIONS="-Dnewrelic.environment=${ENV}" 
 #> envar java -jar test.jar
 ```
-Then, if you wanted to run your java appliction using the dev environment, you could just run the image and java would be run with an environment variable set `JAVA_TOOL_OPTIONS="-Dnewrelic.environment=dev".  However, if you wanted to run it in the prod environment, you could first set `ENV=prod`.  Then java will be run with an environment variable set `JAVA_TOOL_OPTIONS="-Dnewrelic.environment=prod`. All without modifying the image in any way.
+Then, if you wanted to run your java appliction using the dev environment, you could just run the image and java would be run with an environment variable set `JAVA_TOOL_OPTIONS="-Dnewrelic.environment=dev"`.  However, if you wanted to run it in the prod environment, you could first set `ENV=prod`.  Then java will be run with an environment variable set `JAVA_TOOL_OPTIONS="-Dnewrelic.environment=prod"`. All without modifying the image in any way.
 
 # Known Issues
 
