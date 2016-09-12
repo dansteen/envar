@@ -3,9 +3,9 @@ package main
 import "syscall"
 import "log"
 import "os"
+
 import "os/exec"
 import "fmt"
-import "regexp"
 import "strings"
 
 func main() {
@@ -15,26 +15,30 @@ func main() {
 		os.Exit(0)
 	}
 
-	// buld our regex to identify environment variables
-	regex, err := regexp.Compile(`\${?[A-Z_][A-Z0-9_]*}?`)
-	if err != nil {
-		log.Fatal("Could not compile regex")
+	// we process environment variables as well for environment variable references
+	for _, value := range os.Environ() {
+		// split the value into parts
+		varParts := strings.SplitN(value, "=", 2)
+		// run through the value and resolve the variables present down as far as possible
+		valuePart := os.ExpandEnv(varParts[1])
+		for oldValuePart := ""; oldValuePart != valuePart; valuePart = os.ExpandEnv(valuePart) {
+			oldValuePart = valuePart
+		}
+		// once we are done processing we set the environment variable
+		err := os.Setenv(varParts[0], valuePart)
+		if err != nil {
+			log.Fatal("Could not set env variable %s=%s", varParts[0], valuePart)
+		}
 	}
 
 	// we run through our provided command and replace any environment variables with their values
-	for index, variable := range os.Args {
-		// get our matches
-		matches := regex.FindAllString(variable, -1)
-		// replace each match
-		for _, match := range matches {
-			variable = strings.Replace(variable, match, os.Getenv(strings.Trim(match, "${}")), 1)
-		}
-		// replace our command line parameter
-		os.Args[index] = variable
+	for index, arg := range os.Args {
+		os.Args[index] = os.ExpandEnv(arg)
 	}
 
-	// try to find the command
-	os.Args[1], err = exec.LookPath(os.Args[1])
+	// try to find the command (we break this into two lines because of http://stackoverflow.com/questions/21345274/go-fails-to-infer-type-in-assignment-non-name-on-left-side-of )
+	command, err := exec.LookPath(os.Args[1])
+	os.Args[1] = command
 	if err != nil {
 		log.Fatal("Could not find command in PATH")
 	}
