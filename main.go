@@ -36,14 +36,17 @@ func main() {
 		os.Args[index] = os.ExpandEnv(arg)
 	}
 
-	// try to find the command (we break this into two lines because of http://stackoverflow.com/questions/21345274/go-fails-to-infer-type-in-assignment-non-name-on-left-side-of )
-	command, err := exec.LookPath(os.Args[1])
-	os.Args[1] = command
+	// look for our command.
+	// if there is a space in the command, we only look for the first part.  This is needed in a case where Arg[1] was a variable
+	// that got substituted above
+	commandParts := strings.SplitN(os.Args[1], " ", 2)
+	command, err := exec.LookPath(commandParts[0])
+	commandParts[0] = command
 	if err != nil {
 		log.Fatal("Could not find command in PATH")
 	}
 
-	err = syscall.Exec(os.Args[1], os.Args[1:], os.Environ())
+	err = syscall.Exec(commandParts[0], append(commandParts, os.Args[2:]...), os.Environ())
 	if err != nil {
 		log.Fatal(err)
 	}
