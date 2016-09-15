@@ -32,7 +32,7 @@ Unfortunately, passing variables into the container in this way is an extermely 
 
 # The Solution
 
-envar is a very small application that reads in a command line, and replaces any environment variables that it finds with their values in the environment.  It then calls `exec` and replaces itself (the PID stays the same) with the command passed in on the command line.  Any variables that are not found in the environment are removed prior to execution. PATH searching is handled as defined [here](https://golang.org/pkg/os/exec/#LookPath).
+envar is a very small application that reads in a command line, and replaces any environment variables that it finds with their values in the environment.  It then calls `exec` and replaces itself (the PID stays the same) with the command passed in on the command line.  Any variables that are not found in the environment are removed prior to execution. PATH searching is handled as defined [here](https://golang.org/pkg/os/exec/#LookPath).  In the event that you pass items in as a variable as the first argument to `envar`, only the first item passed in will have PATH searching done on it (e.g. `TEST='ls echo' envar \$TEST` will resolve to `/bin/ls echo`, not `/bin/ls /bin/echo`.
 
 ## Usage
 `envar <command> <command_options>`
