@@ -64,8 +64,15 @@ func main() {
 	// we run through our provided command and replace any environment variables with their values
 	newArgs := make([]string, 0)
 	for _, arg := range os.Args {
-		// the replaced variables may contain multiple switches/arguments.  We need to break them out into their own elements
-		argParts := shellSplit(os.ExpandEnv(arg))
+		// expand our variables
+		expandedArg := os.ExpandEnv(arg)
+		// if a value has been expanded we split it up.  Otherwise we leave it alone (so we don't split items passed in in quotes)
+		argParts := make([]string, 0)
+		if expandedArg != arg {
+			argParts = shellSplit(expandedArg)
+		} else {
+			argParts = []string{arg}
+		}
 		// add to our new set of args
 		newArgs = append(newArgs, argParts...)
 	}
